@@ -1,0 +1,42 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DOCKER_USER: ${{secrets.DOCKER_USER}}
+  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+  IMAGE_NAME: navrocky/novnc
+  VERSION: "1.4.0"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the Docker image
+        run: >
+          docker build . --file Dockerfile
+          --tag ${IMAGE_NAME}:${VERSION}
+          --tag ${IMAGE_NAME}:latest
+      - name: Push image to Docker Hub
+        run: |
+          docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+          docker push ${IMAGE_NAME}:${VERSION}
+          docker push ${IMAGE_NAME}:latest
+
+  update_readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update Docker Hub description
+        uses: meeDamian/sync-readme@v1.0.6
+        with:
+          user: ${{secrets.DOCKER_USER}}
+          pass: ${{secrets.DOCKER_PASSWORD}}
+          slug: navrocky/novnc
+          readme: ./README.md
+          description: true
+
