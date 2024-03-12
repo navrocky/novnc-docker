@@ -18,11 +18,13 @@ docker run -d \
     navrocky/novnc
 ```
 
-Sample docker-compose.yml:
+Then access noVNC at the url: http://localhost:8080/vnc.html
+
+Here is a sample `docker-compose.yml`:
 
 ```sh
 version: "3"
-service:
+services:
     novnc:
         image: navrocky/novnc:1.4.0
         environment:
