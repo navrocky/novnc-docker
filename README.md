@@ -34,3 +34,12 @@ services:
         ports:
             - 8080:8080
 ```
+
+Here is a snippet how to start VNC session on a typical Debian host:
+
+```sh
+apt install -y tigervnc-standalone-server icewm
+Xvnc :0 -geometry 1800x900 -SecurityTypes None &
+export DISPLAY=:0
+icewm
+```
